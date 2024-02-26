@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ import (
 	"github.com/suavelad/gin-gorm-rest/models"
 )
 
-var SECRET string = "DFSGHH34657FDGHFDFGdfdhggfhghfggdggfdgdfsH434365467546"
+var SECRET string = os.Getenv("SECRET")
 
 func GetJWTSecretByte() []byte {
 
