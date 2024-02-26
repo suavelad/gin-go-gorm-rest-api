@@ -1,0 +1,40 @@
+version: '3.9' 
+
+services:
+  go-gin-app:
+    container_name: go-gin-app
+    image: sunnex/go-gin:1.0.0
+    build: .
+    # environment:
+    #   # - DATABASE_URL="host=go_db port=5432 user=postgres password=postgres dbname=go_db sslmode=disable"
+    ports:
+      - "8888:8888"
+    networks:
+      - backend
+    depends_on:
+      - go-gin-db
+    
+    
+    volumes:
+      - .:/app
+    
+  go-gin-db:
+    container_name: go-gin-db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,11 @@
+basePath: /
+host: localhost:8888
+info:
+  contact:
+    email: sunnexajayi@gmail.com
+    name: API Support
+  description: Swagger API for Golang Project Blueprint.
+  title: User Gin App Swagger API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
