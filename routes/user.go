@@ -6,7 +6,7 @@ import (
 	"github.com/suavelad/gin-gorm-rest/middleware"
 )
 
-func UserRouter(router *gin.Engine) {
+func UserRouter(protectedRouter *gin.Engine) {
 
 	// Define routes without RequireAuth middleware
 	// authRoutes := router.Group("/auth")
@@ -20,16 +20,15 @@ func UserRouter(router *gin.Engine) {
 	// Define routes with RequireAuth middleware
 
 	// Apply global middleware
-	router.Use(middleware.RequireAuth)
+	protectedRouter.Use(middleware.RequireAuth)
 
-	protectedRoutes := router.Group("/")
+	protectedRoutes := protectedRouter.Group("/users")
 	// You can add additional routes to the protected group if needed
 	{
-		protectedRoutes.GET("/", controller.PingController)
-		protectedRoutes.GET("/users", controller.GetUsers)
-		protectedRoutes.GET("/user/:id", controller.GetUser)
-		protectedRoutes.DELETE("/user/:id", controller.DeleteUser)
-		protectedRoutes.PUT("/user/:id", controller.UpdateUser)
-		protectedRoutes.POST("/user/upload", controller.UploadUserProfileImage)
+		protectedRoutes.GET("/", controller.GetUsers)
+		protectedRoutes.GET("/:id", controller.GetUser)
+		protectedRoutes.DELETE("/:id", controller.DeleteUser)
+		protectedRoutes.PUT("/:id", controller.UpdateUser)
+		protectedRoutes.POST("/upload", controller.UploadUserProfileImage)
 	}
 }

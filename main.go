@@ -29,17 +29,22 @@ func init() {
 // @contact.email sunnexajayi@gmail.com
 
 //@BasePath /
-func main() {
 
+func main() {
 	router := gin.New()
 	config.Connect()
+
+	// Unprotected Routes
 	routes.AuthRouter(router)
+	routes.HealthRouter(router)
 
-	// Your URL with the dynamic port
 	swaggerURL := fmt.Sprintf("%s/swagger/doc.json", os.Getenv("DOMAIN_HOST"))
-	fmt.Println(swaggerURL)
 
+	// Use ginSwagger.WrapHandler to serve Swagger UI
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL(swaggerURL)))
-	router.Run(":" + os.Getenv("PORT"))
 
+	//For Protected Routes
+	routes.UserRouter(router)
+
+	router.Run(":" + os.Getenv("PORT"))
 }

@@ -1,4 +1,30 @@
 basePath: /
+definitions:
+  structure.LoginUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  structure.NewUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  structure.RefreshToken:
+    properties:
+      id:
+        type: integer
+      refresh_token:
+        type: string
+    type: object
 host: localhost:8888
 info:
   contact:
@@ -7,16 +33,251 @@ info:
   description: Swagger API for Golang Project Blueprint.
   title: User Gin App Swagger API
   version: "1.0"
-
-securityDefinitions:
-  oauth2:
-    type: oauth2
-    flow: implicit  # or 'password', 'application', or 'accessCode'
-    authorizationUrl: https://example.com/oauth/authorize
-    tokenUrl: https://example.com/oauth/token
-    scopes:
-      read: Grants read access
-      write: Grants write access
-      
-paths: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: User Login
+      parameters:
+      - description: User Login
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/structure.LoginUser'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: User Login based on parameters
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Generate Access token using Refresh Token based on parameters
+      parameters:
+      - description: User Refresh
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/structure.RefreshToken'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Generate Access token using Refresh Token based on parameters
+      tags:
+      - Auth
+  /auth/signup/:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/structure.NewUser'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Create new user based on parameters
+      tags:
+      - Auth
+  /health:
+    get:
+      description: Check Health
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Check Health
+      tags:
+      - Health
+  /user/upload:
+    post:
+      description: upload user profile
+      parameters:
+      - description: Image file
+        in: formData
+        name: profile_image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/structure.NewUser'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      security:
+      - oauth2: []
+      summary: Upload User Profile
+      tags:
+      - Users
+  /users/:
+    get:
+      description: get all users
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/structure.NewUser'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      security:
+      - oauth2: []
+      summary: Get all users
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: delete a user
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      security:
+      - oauth2: []
+      summary: Delete a user
+      tags:
+      - Users
+    get:
+      description: get a user
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/structure.NewUser'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      security:
+      - oauth2: []
+      summary: Get a user
+      tags:
+      - Users
+    put:
+      description: Update one user by ID
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/structure.NewUser'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      security:
+      - oauth2: []
+      summary: Update one user by ID
+      tags:
+      - Users
 swagger: "2.0"
