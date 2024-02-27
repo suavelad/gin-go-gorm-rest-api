@@ -16,3 +16,17 @@ In this sample project, I covered
 - Create API to return new access token using refresh token 
 - Setup Go Swagger Docs
 - Setting .env for environment variable
+
+Swagger Docs can be accessed here : 'http://localhost:8888/swagger/index.html'
+
+
+
+
+
+To Start the Project:
+
+- docker-compose build
+- docker-compose up
+
+
+NB: Ensure Docker is installed 
