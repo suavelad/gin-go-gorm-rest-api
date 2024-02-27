@@ -63,7 +63,7 @@ func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, string
 	return nil, "Invalid access token"
 }
 
-//Generate jwt token
+// Generate jwt token
 func GenerateJwtToken(c *gin.Context, user models.User) (bool, map[string]string) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.Id,

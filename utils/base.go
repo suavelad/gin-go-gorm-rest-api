@@ -4,9 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
-
 func SuccessJSONResponse(status int, c *gin.Context, message string, data interface{}) {
 
 	c.JSON(status, gin.H{
