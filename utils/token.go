@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -23,7 +22,7 @@ func GetJWTSecretByte() []byte {
 	return key
 }
 
-func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, error) {
+func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, string) {
 
 	token, err := jwt.Parse(access_token, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
@@ -38,7 +37,7 @@ func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, error)
 	if err != nil {
 		fmt.Println(err)
 		c.AbortWithStatus(http.StatusUnauthorized)
-		return nil, errors.New("Invalid access token")
+		return nil, "Invalid access token"
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
@@ -46,7 +45,9 @@ func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, error)
 		// Check if token is expired
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
-			return nil, errors.New("Invalid access token")
+			// error_message := "Invalid payload used"
+			// utils.ErrorJSONResponse(400, c, error_message)
+			return nil, "Token has expired"
 
 		}
 		// check if user exist
@@ -55,11 +56,11 @@ func ValidateJWTToken(c *gin.Context, access_token string) (*models.User, error)
 
 		if user.Id == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)
-			return nil, errors.New("Invalid access token")
+			return nil, "Invalid access token"
 		}
-		return &models.User{}, nil
+		return &models.User{}, ""
 	}
-	return nil, errors.New("Invalid access token")
+	return nil, "Invalid access token"
 }
 
 //Generate jwt token

@@ -11,6 +11,7 @@ import (
 	_ "github.com/suavelad/gin-gorm-rest/docs"
 	"github.com/suavelad/gin-gorm-rest/initializer"
 	"github.com/suavelad/gin-gorm-rest/routes"
+
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -32,7 +33,7 @@ func main() {
 
 	router := gin.New()
 	config.Connect()
-	routes.UserRouter(router)
+	routes.AuthRouter(router)
 
 	// Your URL with the dynamic port
 	swaggerURL := fmt.Sprintf("%s/swagger/doc.json", os.Getenv("DOMAIN_HOST"))

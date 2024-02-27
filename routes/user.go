@@ -9,13 +9,13 @@ import (
 func UserRouter(router *gin.Engine) {
 
 	// Define routes without RequireAuth middleware
-	authRoutes := router.Group("/auth")
-	{
-		authRoutes.POST("/signup", controller.CreateUser)
-		authRoutes.POST("/login", controller.Login)
-		authRoutes.POST("/refresh", middleware.RequireAuth, controller.GetNewAccessToken)
+	// authRoutes := router.Group("/auth")
+	// {
+	// 	authRoutes.POST("/signup", controller.CreateUser)
+	// 	authRoutes.POST("/login", controller.Login)
+	// 	authRoutes.POST("/refresh", middleware.RequireAuth, controller.GetNewAccessToken)
 
-	}
+	// }
 
 	// Define routes with RequireAuth middleware
 

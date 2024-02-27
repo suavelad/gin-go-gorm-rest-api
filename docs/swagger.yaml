@@ -7,5 +7,16 @@ info:
   description: Swagger API for Golang Project Blueprint.
   title: User Gin App Swagger API
   version: "1.0"
+
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    flow: implicit  # or 'password', 'application', or 'accessCode'
+    authorizationUrl: https://example.com/oauth/authorize
+    tokenUrl: https://example.com/oauth/token
+    scopes:
+      read: Grants read access
+      write: Grants write access
+      
 paths: {}
 swagger: "2.0"

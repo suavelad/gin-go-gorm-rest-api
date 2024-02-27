@@ -11,19 +11,26 @@ import (
 
 func RequireAuth(c *gin.Context) {
 
+	authHeader, ok := c.Request.Header["Authorization"]
+	if !ok || len(authHeader) == 0 {
+		utils.ErrorJSONResponse(401, c, "Authorization header missing")
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 	// Get Token from  header
 	access_token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	fmt.Println((access_token))
 
 	// Decode/validate it
 	user, err := utils.ValidateJWTToken(c, access_token)
 
-	if err == nil {
+	if user != nil {
 		c.Set("user", user)
 		c.Next()
 
 	} else {
 		fmt.Println(user)
-		error_message := "Invalid authentication payload "
+		error_message := string(err)
 		utils.ErrorJSONResponse(401, c, error_message)
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
