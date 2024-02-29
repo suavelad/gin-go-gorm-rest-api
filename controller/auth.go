@@ -5,6 +5,7 @@ import (
 
 	"github.com/suavelad/gin-gorm-rest/config"
 	_ "github.com/suavelad/gin-gorm-rest/docs"
+	"github.com/suavelad/gin-gorm-rest/jobs"
 	"github.com/suavelad/gin-gorm-rest/models"
 	"github.com/suavelad/gin-gorm-rest/serializers"
 	"github.com/suavelad/gin-gorm-rest/structure"
@@ -39,6 +40,15 @@ func CreateUser(c *gin.Context) {
 		utils.ErrorJSONResponse(400, c, error_message)
 		return
 	}
+	config.DB.Where("email=?", user.Email).First(&user)
+
+	if user.Id != 0 {
+		error_message := "User with this email already exist"
+		utils.ErrorJSONResponse(400, c, error_message)
+		return
+
+	}
+
 	new_user := models.User{Email: user.Email, Password: string(hash), Name: user.Name}
 
 	result := config.DB.Create(&new_user)
@@ -48,6 +58,29 @@ func CreateUser(c *gin.Context) {
 		return
 
 	}
+
+	fmt.Println("Sent to Email Send Job")
+	task := jobs.Task{
+		Function: utils.SendEmailTask,
+		Input:    []interface{}{user.Email, "", "First Go Mail", "New User SignUp"},
+		Result:   make(chan interface{}),
+		Error:    make(chan error),
+	}
+
+	// Run the task in the background using a goroutine
+	go jobs.ExecuteTask(task)
+
+	// wg.Add(1)
+	// go func() {
+	// 	defer wg.Done()
+	// 	jobs.ExecuteTask(task)
+	// }()
+
+	// // ... continue with your main code ...
+
+	// // Wait for all background jobs to finish
+	// wg.Wait()
+
 	message := "User Created Successfully "
 	utils.SuccessJSONResponse(201, c, message, serializers.SerializeUser(user))
 

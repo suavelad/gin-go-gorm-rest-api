@@ -27,10 +27,9 @@ func init() {
 // @host localhost:8888
 // @contact.name API Support
 // @contact.email sunnexajayi@gmail.com
-
 //@BasePath /
-
 func main() {
+
 	router := gin.New()
 	config.Connect()
 

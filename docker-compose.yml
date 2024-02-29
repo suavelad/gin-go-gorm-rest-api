@@ -32,6 +32,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  redis_app:
+    container_name: redis_app
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=pass123a
+    ports:
+      - 6379:6379
+    
+    networks:
+      - backend
+    
+  # workwebui:
+  #   image: go-workwebui # Replace with the actual image and tag
+  #   build: .
+  #   command: ["-redis=go-redis:6379", "-ns=application_namespace", "-listen=:5040"]
+  #   ports:
+  #     - "5040:5040"  # Expose the necessary port
+  #   depends_on:
+  #     - redis
+
 volumes:
   pgdata: {}
 
